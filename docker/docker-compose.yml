@@ -7,8 +7,9 @@ services:
       CHOKIDAR_USEPOLLING: 1
       CARGO_TARGET_DIR: /tmp/target
       CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+      PG_URL: postgres://user:pass@db:5432/web
     volumes:
-      - ../apps/service:/app
+      - ../apps/services:/app
       - saml_sample_cargo_cache:/usr/local/cargo/registry
       - saml_sample_target_cache:/tmp/target
     ports:
@@ -17,16 +18,42 @@ services:
     working_dir: /app
     security_opt:
       - seccomp:unconfined
+    depends_on:
+      - db
+      - keycloak
+
+  db:
+    image: postgres:17.4
+    environment:
+      - POSTGRES_DB=web
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - TZ=Asia/Tokyo
+      - PGTZ=Asia/Tokyo
+    ports:
+      - 9432:5432
+    volumes:
+      - saml_sample_postgresql_data:/var/lib/postgresql/data
       
-  keyclock:
+  keycloak:
     image: keycloak/keycloak
     ports:
-      - 18080:8080
+      - "8080:8080"
+    depends_on:
+      - db
+    tty: true
+    command: "start-dev"
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-
+      KC_DB: postgres
+      KC_DB_PASSWORD: pass
+      KC_DB_USERNAME: user
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_HOST: db
+      KC_DB_URL_DATABASE: web
 
 volumes:
   saml_sample_cargo_cache:
   saml_sample_target_cache:
+  saml_sample_postgresql_data:

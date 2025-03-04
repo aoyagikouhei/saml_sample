@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "apps/service"
+			"path": "apps/services"
 		}
 	],
 	"settings": {}

@@ -4,5 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+anyhow = { workspace = true }
 axum = { workspace = true }
+openssl = { workspace = true }
+openssl-probe = { workspace = true }
+reqwest = { workspace = true }
+samael = { workspace = true }
 tokio = { workspace = true} 

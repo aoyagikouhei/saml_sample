@@ -1,6 +1,6 @@
 FROM rust:1.85
 
-RUN apt -y update && apt -y install musl-tools libssl-dev pkg-config build-essential
+RUN apt -y update && apt -y install musl-tools libssl-dev pkg-config build-essential xmlsec1 libxmlsec1-dev pkg-config clang
 
 RUN rustup update && \
   rustup component add rustfmt clippy
